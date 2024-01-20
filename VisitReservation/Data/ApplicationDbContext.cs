@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using VisitReservation.Models;
 using VisitReservation.Models.LinkTables;
 
@@ -19,16 +21,48 @@ namespace VisitReservation.Data
         public DbSet<Education> Educations { get; set; }
         public DbSet<MedicalService> MedicalServices { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<Specialization> Specializations { get; set; } 
+        public DbSet<Specialization> Specializations { get; set; }
         public DbSet<TreatedDisease> TreatedDiseases { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
         public DbSet<DoctorEducation> DoctorEducations { get; set; }
         public DbSet<DoctorMedicalService> DoctorMedicalServices { get; set; }
         public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
         public DbSet<DoctorTreatedDisease> DoctorTreatedDiseases { get; set; }
 
+        // konfiguracja serwisu do początkowego ustawienia specyficznych wamagań dla rejestracji i logowania
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                // Ustawienia hasła
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 3;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+
+
+                // Ustawienia logowania
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // początkowe tworzenie ról
+            builder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "1", Name = "Patient", NormalizedName = "PATIENT" },
+                new IdentityRole { Id = "2", Name = "Doctor", NormalizedName = "DOCTOR" },
+                new IdentityRole { Id = "3", Name = "Admin", NormalizedName = "ADMIN" }
+);
+
 
 
             // tworzenie relacji wiele do wielu
@@ -134,6 +168,8 @@ namespace VisitReservation.Data
             builder.Entity<Review>()
                 .Property(r => r.Rating)
                 .HasColumnType("decimal(2, 1)");
+
+
         }
     }
 }

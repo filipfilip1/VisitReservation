@@ -1,0 +1,26 @@
+﻿@page
+@model VisitReservation.Pages.Register.RegisterDoctorModel
+@{
+}
+
+<h2>Rejestracja Lekarza</h2>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <!-- Pola formularza analogicznie jak dla pacjenta, ale z dodatkowymi polami specyficznymi dla lekarza -->
+    <!-- Przykład dla jednego z dodatkowych pól: -->
+    <div class="form-group">
+        <label asp-for="Input.Description"></label>
+        <input asp-for="Input.Description" class="form-control" />
+        <span asp-validation-for="Input.Description" class="text-danger"></span>
+    </div>
+
+    <!-- Tutaj można dodać listy rozwijane dla edukacji, specjalizacji itp. -->
+    <div class="form-group">
+        <label for="education">Edukacja</label>
+        <select id="education" asp-for="Input.EducationIds" asp-items="Model.EducationList" class="form-control"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Zarejestruj</button>
+</form>
