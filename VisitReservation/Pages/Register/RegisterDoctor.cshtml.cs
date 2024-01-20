@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using VisitReservation.Models;
 using VisitReservation.Services.DataManagmentDoctor;
 
@@ -13,9 +11,11 @@ namespace VisitReservation.Pages.Register
     public class RegisterDoctorModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
-        // Zak³adaj¹c, ¿e masz serwisy do obs³ugi danych edukacji, specjalizacji itp.
         private readonly IEducationService _educationService;
         private readonly ISpecializationService _specializationService;
+        private readonly ITreatedDiseaseService _treatedDiseaseService;
+        private readonly IMedicalServiceService _medicalServiceService;
+
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -37,30 +37,39 @@ namespace VisitReservation.Pages.Register
 
             public List<int> EducationIds { get; set; }
             public List<int> SpecializationIds { get; set; }
-            // ... inne powi¹zania
+            public List<int> MedicalServiceIds { get; set; }
+            public List<int> TreatedDiseaseIds { get; set; }
         }
 
-        // Listy dla danych rozwijanych
         public List<SelectListItem> Educations { get; set; }
         public List<SelectListItem> Specializations { get; set; }
-        // ... inne listy
+        public List<SelectListItem> MedicalServices { get; set; }
+        public List<SelectListItem> TreatedDiseases { get; set; }
+
+
 
         public RegisterDoctorModel(UserManager<IdentityUser> userManager,
                                    IEducationService educationService,
-                                   ISpecializationService specializationService)
+                                   ISpecializationService specializationService,
+                                   IMedicalServiceService medicalServiceService,
+                                   ITreatedDiseaseService treatedDiseaseService)
+
         {
             _userManager = userManager;
             _educationService = educationService;
             _specializationService = specializationService;
+            _medicalServiceService = medicalServiceService;
+            _treatedDiseaseService = treatedDiseaseService;
         }
 
         public void OnGet()
         {
-            // Wczytanie danych do list rozwijanych
             Educations = _educationService.GetEducationSelectList();
             Specializations = _specializationService.GetSpecializationSelectList();
-            // ... wczytywanie innych list
+            MedicalServices = _medicalServiceService.GetMedicalServiceSelectList();
+            TreatedDiseases = _treatedDiseaseService.GetTreatedDiseaseSelectList();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -68,22 +77,25 @@ namespace VisitReservation.Pages.Register
             {
                 var user = new Doctor
                 {
-                    UserName = Input.Email,
-                    Email = Input.Email,
+                    UserName = Input.Email, 
+                    Email = Input.Email, 
                     Description = Input.Description,
-                    WorkAddress = Input.WorkAddress,
-                    // ... przypisywanie pozosta³ych pól
+                    WorkAddress = Input.WorkAddress, 
+
+                    VerificationStatus = VerificationStatus.PendingVerification, // Status weryfikacji
+                                                                                
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    // Przypisywanie powi¹zañ, np. edukacji, specjalizacji itp.
+                    // Przypisywanie powi¹zañ edukacji, specjalizacji itd.
                     _educationService.AssignEducationsToDoctor(user.Id, Input.EducationIds);
                     _specializationService.AssignSpecializationsToDoctor(user.Id, Input.SpecializationIds);
-                    // ... przypisywanie innych powi¹zañ
+                    _medicalServiceService.AssignMedicalServicesToDoctor(user.Id, Input.MedicalServiceIds);
+                    _treatedDiseaseService.AssignTreatedDiseasesToDoctor(user.Id, Input.TreatedDiseaseIds);
 
-                    // Dodatkowe akcje po pomyœlnej rejestracji, np. przekierowanie
+                    // przekierowanie po pomyœlnej akcji
                     return RedirectToPage("Index");
                 }
                 foreach (var error in result.Errors)
@@ -93,6 +105,7 @@ namespace VisitReservation.Pages.Register
             }
             return Page();
         }
+
     }
 
 }

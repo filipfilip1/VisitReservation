@@ -1,4 +1,5 @@
-﻿using VisitReservation.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using VisitReservation.Data;
 using VisitReservation.Models;
 using VisitReservation.Models.LinkTables;
 
@@ -13,10 +14,16 @@ namespace VisitReservation.Services.DataManagmentDoctor
             _context = context;
         }
 
-        public List<TreatedDisease> GetAllTreatedDiseases()
+        public List<SelectListItem> GetTreatedDiseaseSelectList()
         {
-            return _context.TreatedDiseases.ToList();
+            return _context.TreatedDiseases
+                .Select(td => new SelectListItem
+                {
+                    Value = td.TreatedDiseaseId.ToString(),
+                    Text = td.Name
+                }).ToList();
         }
+
 
         public void AssignTreatedDiseasesToDoctor(string doctorId, List<int> diseaseIds)
         {

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VisitReservation.Data;
 using VisitReservation.Services;
+using VisitReservation.Services.DataManagmentDoctor; // Dodaj odpowiedni¹ przestrzeñ nazw
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+
+// Rejestracja serwisów
+builder.Services.AddScoped<IEducationService, EducationService>();
+builder.Services.AddScoped<ISpecializationService, SpecializationService>();
+builder.Services.AddScoped<IMedicalServiceService, MedicalServiceService>();
+builder.Services.AddScoped<ITreatedDiseaseService, TreatedDiseaseService>();
 
 var app = builder.Build();
 

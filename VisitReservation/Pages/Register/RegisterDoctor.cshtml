@@ -1,25 +1,55 @@
 ﻿@page
 @model VisitReservation.Pages.Register.RegisterDoctorModel
-@{
-}
 
 <h2>Rejestracja Lekarza</h2>
 
 <form method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    
-    <!-- Pola formularza analogicznie jak dla pacjenta, ale z dodatkowymi polami specyficznymi dla lekarza -->
-    <!-- Przykład dla jednego z dodatkowych pól: -->
+
+    <!-- Pola specyficzne dla lekarza -->
     <div class="form-group">
-        <label asp-for="Input.Description"></label>
+        <label asp-for="Input.Email">Email</label>
+        <input asp-for="Input.Email" class="form-control" />
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Password">Hasło</label>
+        <input asp-for="Input.Password" class="form-control" />
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Description">Opis</label>
         <input asp-for="Input.Description" class="form-control" />
         <span asp-validation-for="Input.Description" class="text-danger"></span>
     </div>
 
-    <!-- Tutaj można dodać listy rozwijane dla edukacji, specjalizacji itp. -->
+    <div class="form-group">
+        <label asp-for="Input.WorkAddress">Adres Pracy</label>
+        <input asp-for="Input.WorkAddress" class="form-control" />
+        <span asp-validation-for="Input.WorkAddress" class="text-danger"></span>
+    </div>
+
+    <!-- Listy rozwijane -->
     <div class="form-group">
         <label for="education">Edukacja</label>
-        <select id="education" asp-for="Input.EducationIds" asp-items="Model.EducationList" class="form-control"></select>
+        <select id="education" asp-for="Input.EducationIds" asp-items="Model.Educations" class="form-control" multiple></select>
+    </div>
+
+    <div class="form-group">
+        <label for="specialization">Specjalizacja</label>
+        <select id="specialization" asp-for="Input.SpecializationIds" asp-items="Model.Specializations" class="form-control" multiple></select>
+    </div>
+
+    <div class="form-group">
+        <label for="medicalService">Usługi Medyczne</label>
+        <select id="medicalService" asp-for="Input.MedicalServiceIds" asp-items="Model.MedicalServices" class="form-control" multiple></select>
+    </div>
+
+    <div class="form-group">
+        <label for="treatedDisease">Leczone Choroby</label>
+        <select id="treatedDisease" asp-for="Input.TreatedDiseaseIds" asp-items="Model.TreatedDiseases" class="form-control" multiple></select>
     </div>
 
     <button type="submit" class="btn btn-primary">Zarejestruj</button>

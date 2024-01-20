@@ -1,11 +1,11 @@
-﻿using VisitReservation.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using VisitReservation.Models;
 
 namespace VisitReservation.Services.DataManagmentDoctor
 {
     public interface ITreatedDiseaseService
     {
-        List<TreatedDisease> GetAllTreatedDiseases();
+        List<SelectListItem> GetTreatedDiseaseSelectList();
         void AssignTreatedDiseasesToDoctor(string doctorId, List<int> diseaseIds);
     }
 }
-s
