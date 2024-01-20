@@ -170,6 +170,57 @@ namespace VisitReservation.Data
                 .HasColumnType("decimal(2, 1)");
 
 
+            // Seedowanie początkowych danych
+            builder.Entity<Specialization>().HasData(
+                new Specialization { SpecializationId = 1, Name = "Kardiologia" },
+                new Specialization { SpecializationId = 2, Name = "Neurologia" },
+                new Specialization { SpecializationId = 3, Name = "Pediatria" }
+            );
+
+            builder.Entity<Education>().HasData(
+                new Education { EducationId = 1, University = "Uniwersytet Medyczny w Warszawie" },
+                new Education { EducationId = 2, University = "Uniwersytet Medyczny w Krakowie" },
+                new Education { EducationId = 3, University = "Gdański Uniwersytet Medyczny" }
+            );
+
+            builder.Entity<MedicalService>().HasData(
+                new MedicalService { MedicalServiceId = 1, Name = "Badanie EKG" },
+                new MedicalService { MedicalServiceId = 2, Name = "USG jamy brzusznej" },
+                new MedicalService { MedicalServiceId = 3, Name = "Konsultacja onkologiczna" }
+            );
+
+            builder.Entity<TreatedDisease>().HasData(
+                new TreatedDisease { TreatedDiseaseId = 1, Name = "Cukrzyca" },
+                new TreatedDisease { TreatedDiseaseId = 2, Name = "Astma" },
+                new TreatedDisease { TreatedDiseaseId = 3, Name = "Choroba Parkinsona" }
+            );
+
+            // Tworzenie zahashowanego hasła dla admina
+            var passwordHasher = new PasswordHasher<Admin>();
+            var hashedPassword = passwordHasher.HashPassword(null, "admin");
+
+            // Tworzenie początkowego użytkownika admin
+            builder.Entity<Admin>().HasData(
+                new Admin
+                {
+                    Id = "1",
+                    UserName = "admin",
+                    NormalizedUserName = "ADMIN",
+                    Email = "admin@admin.com",
+                    NormalizedEmail = "ADMIN@ADMIN.COM",
+                    EmailConfirmed = true,
+                    PasswordHash = hashedPassword,
+                    SecurityStamp = string.Empty
+                }
+            );
+
+            builder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "3",
+                    UserId = "1"
+                }
+            );
         }
     }
 }

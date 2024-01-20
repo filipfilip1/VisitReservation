@@ -9,7 +9,7 @@ namespace VisitReservation.Pages.Register
 {
     public class RegisterPatientModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Patient> _userManager;
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -21,7 +21,7 @@ namespace VisitReservation.Pages.Register
             public DateTime DateOfBirth { get; set; }
         }
 
-        public RegisterPatientModel(UserManager<IdentityUser> userManager)
+        public RegisterPatientModel(UserManager<Patient> userManager)
         {
             _userManager = userManager;
         }

@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VisitReservation.Data;
-using VisitReservation.Services;
-using VisitReservation.Services.DataManagmentDoctor; // Dodaj odpowiedni¹ przestrzeñ nazw
+using VisitReservation.Models;
+using VisitReservation.Services.DataManagmentDoctor;
+using VisitReservation.Services.UserManagmentServices.AdminServices;
+using VisitReservation.Services.UserManagmentServices.DoctorServices;
+using VisitReservation.Services.UserManagmentServices.PatientServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,17 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+// dodanie niestandardowych modeli u¿ytkownika
+builder.Services.AddIdentityCore<Admin>() // Dla admina
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityCore<Patient>() // Dla pacjenta
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityCore<Doctor>() // Dla lekarza
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // skonfigurowanie serwisu pod obs³ugê ról
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -23,6 +37,10 @@ builder.Services.AddScoped<IEducationService, EducationService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IMedicalServiceService, MedicalServiceService>();
 builder.Services.AddScoped<ITreatedDiseaseService, TreatedDiseaseService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+
 
 var app = builder.Build();
 
@@ -37,8 +55,6 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-RolesInitializer.CreateRoles(app.Services).Wait();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
