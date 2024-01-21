@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace VisitReservation.Pages
 {
+    [AutoValidateAntiforgeryToken()]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;

@@ -106,11 +106,6 @@ namespace VisitReservation.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -163,9 +158,7 @@ namespace VisitReservation.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -581,29 +574,11 @@ namespace VisitReservation.Migrations
                         });
                 });
 
-            modelBuilder.Entity("VisitReservation.Models.Admin", b =>
+            modelBuilder.Entity("VisitReservation.Models.Account", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.HasDiscriminator().HasValue("Admin");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "9d27e210-3389-44f5-bb3b-7f80e9f3fb67",
-                            Email = "admin@admin.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAED1IEEhxj5oPuG0ehxfHEzWOKGlHd3fGxyqZXv4H+CtLERjIHL/NBoi/dXqi48KlqQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Doctor", b =>
@@ -621,7 +596,7 @@ namespace VisitReservation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("Doctor");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Patient", b =>
@@ -631,7 +606,32 @@ namespace VisitReservation.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.HasDiscriminator().HasValue("Patient");
+                    b.ToTable("Patients", (string)null);
+                });
+
+            modelBuilder.Entity("VisitReservation.Models.Admin", b =>
+                {
+                    b.HasBaseType("VisitReservation.Models.Account");
+
+                    b.ToTable("Admins", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "574efcda-5cc6-4501-93fb-3a8a4b3b3fee",
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAENStlEmoYoLO8E1T1vcUvr28q/fDaq18rbRuo/l/O7j5NMvbnSUFeZNM3Wk0HO5d6A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -823,6 +823,42 @@ namespace VisitReservation.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("VisitReservation.Models.Account", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("VisitReservation.Models.Account", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VisitReservation.Models.Doctor", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("VisitReservation.Models.Doctor", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VisitReservation.Models.Patient", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("VisitReservation.Models.Patient", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VisitReservation.Models.Admin", b =>
+                {
+                    b.HasOne("VisitReservation.Models.Account", null)
+                        .WithOne()
+                        .HasForeignKey("VisitReservation.Models.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Education", b =>

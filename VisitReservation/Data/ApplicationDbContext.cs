@@ -14,6 +14,7 @@ namespace VisitReservation.Data
         {
         }
 
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
@@ -30,31 +31,16 @@ namespace VisitReservation.Data
         public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
         public DbSet<DoctorTreatedDisease> DoctorTreatedDiseases { get; set; }
 
-        // konfiguracja serwisu do początkowego ustawienia specyficznych wamagań dla rejestracji i logowania
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
-            {
-                // Ustawienia hasła
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 3;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
 
-
-                // Ustawienia logowania
-                options.SignIn.RequireConfirmedEmail = false;
-                options.SignIn.RequireConfirmedPhoneNumber = false;
-
-            })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
-        }
+       
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Account>(entity => { entity.ToTable("Accounts"); });
+            builder.Entity<Patient>(entity => { entity.ToTable("Patients"); });
+            builder.Entity<Doctor>(entity => { entity.ToTable("Doctors"); });
+            builder.Entity<Admin>(entity => { entity.ToTable("Admins"); });
 
             // początkowe tworzenie ról
             builder.Entity<IdentityRole>().HasData(
@@ -62,7 +48,6 @@ namespace VisitReservation.Data
                 new IdentityRole { Id = "2", Name = "Doctor", NormalizedName = "DOCTOR" },
                 new IdentityRole { Id = "3", Name = "Admin", NormalizedName = "ADMIN" }
             );
-
 
 
             // tworzenie relacji wiele do wielu

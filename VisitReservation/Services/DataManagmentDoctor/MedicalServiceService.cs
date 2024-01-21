@@ -22,6 +22,7 @@ namespace VisitReservation.Services.DataManagmentDoctor
                     Value = ms.MedicalServiceId.ToString(),
                     Text = ms.Name
                 }).ToList();
+
         }
 
 

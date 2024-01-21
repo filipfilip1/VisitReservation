@@ -9,42 +9,44 @@ using VisitReservation.Services.UserManagmentServices.PatientServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Dodanie u³ug do kontenera
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// dodanie niestandardowych modeli u¿ytkownika
-builder.Services.AddIdentityCore<Admin>() // Dla admina
+// Konfiguracja Identity dla niestandardowego u¿ytkownika typu Account
+builder.Services.AddDefaultIdentity<Account>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddIdentityCore<Patient>() // Dla pacjenta
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddIdentityCore<Doctor>() // Dla lekarza
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager<SignInManager<Account>>();
 
-// skonfigurowanie serwisu pod obs³ugê ról
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityCore<Patient>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityCore<Doctor>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityCore<Admin>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+// Konfiguracja Razor Pages
 builder.Services.AddRazorPages();
+builder.Services.AddAuthentication();
 
 // Rejestracja serwisów
 builder.Services.AddScoped<IEducationService, EducationService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IMedicalServiceService, MedicalServiceService>();
 builder.Services.AddScoped<ITreatedDiseaseService, TreatedDiseaseService>();
+/*
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+*/
+
+
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Konfiguracja potoku ¿¹dañ HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -52,7 +54,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // Domyœlna wartoœæ HSTS to 30 dni. Mo¿esz to zmieniæ dla scenariuszy produkcyjnych, zobacz https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -61,10 +63,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// dodanie autentykacji
+// Dodanie autentykacji i autoryzacji
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
 
 app.Run();
+

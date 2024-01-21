@@ -5,7 +5,7 @@
 namespace VisitReservation.Migrations
 {
     /// <inheritdoc />
-    public partial class _2 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,8 +14,8 @@ namespace VisitReservation.Migrations
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "1",
-                columns: new[] { "ConcurrencyStamp", "EmailConfirmed", "PasswordHash" },
-                values: new object[] { "3ec1dd15-2995-4439-a47c-4f13f28caaf8", true, "AQAAAAIAAYagAAAAENlVauwN36WzQvjZ2UtxeqEJr12RD0B1kDVJVY8T5RfaZ+1iNIDjyZXDBIe8rmpXZQ==" });
+                columns: new[] { "ConcurrencyStamp", "PasswordHash" },
+                values: new object[] { "574efcda-5cc6-4501-93fb-3a8a4b3b3fee", "AQAAAAIAAYagAAAAENStlEmoYoLO8E1T1vcUvr28q/fDaq18rbRuo/l/O7j5NMvbnSUFeZNM3Wk0HO5d6A==" });
         }
 
         /// <inheritdoc />
@@ -25,8 +25,8 @@ namespace VisitReservation.Migrations
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "1",
-                columns: new[] { "ConcurrencyStamp", "EmailConfirmed", "PasswordHash" },
-                values: new object[] { "ac7a0222-a930-4b49-adfb-094861344832", false, "AQAAAAIAAYagAAAAEEauhrI8r1wMwtMs9+YmjtRceH/zonZFfRt9DFh2Xcg1B5lLSVVL7UHT+A4j0OKDtQ==" });
+                columns: new[] { "ConcurrencyStamp", "PasswordHash" },
+                values: new object[] { "28c9b523-66d6-4f8b-8016-eddb290b3edf", "AQAAAAIAAYagAAAAEKK13UuKq+rXd2kE666v6+WA37QVuHPGHLRvhSDldyBTbRF/rfLnCHdWd5qpXZ3l6A==" });
         }
     }
 }

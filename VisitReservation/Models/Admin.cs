@@ -2,9 +2,9 @@
 
 namespace VisitReservation.Models
 {
-    // Model pusty, wystarczą bazowe pola z klasy IdentityUser
+    // Model pusty, wystarczą bazowe pola z klasy Account, która dziedziczy po identityUser
     // Najważeniejsze właściwości będą wynikać z otrzymywanej roli "admin"
-    public class Admin : IdentityUser
+    public class Admin : Account
     {
     }
 }

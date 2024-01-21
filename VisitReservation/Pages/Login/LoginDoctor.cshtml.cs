@@ -10,9 +10,9 @@ namespace VisitReservation.Pages.Login
     [AllowAnonymous]
     public class LoginDoctorModel : PageModel
     {
-        private readonly SignInManager<Doctor> _signInManager;
+        private readonly SignInManager<Account> _signInManager;
 
-        public LoginDoctorModel(SignInManager<Doctor> signInManager)
+        public LoginDoctorModel(SignInManager<Account> signInManager)
         {
             _signInManager = signInManager;
         }

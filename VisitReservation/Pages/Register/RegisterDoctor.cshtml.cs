@@ -95,8 +95,7 @@ namespace VisitReservation.Pages.Register
                     _medicalServiceService.AssignMedicalServicesToDoctor(user.Id, Input.MedicalServiceIds);
                     _treatedDiseaseService.AssignTreatedDiseasesToDoctor(user.Id, Input.TreatedDiseaseIds);
 
-                    // przekierowanie po pomyœlnej akcji
-                    return RedirectToPage("Index");
+
                 }
                 foreach (var error in result.Errors)
                 {

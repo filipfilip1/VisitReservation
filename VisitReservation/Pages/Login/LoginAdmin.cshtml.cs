@@ -12,12 +12,10 @@ namespace VisitReservation.Pages.Login
     public class LoginAdminModel : PageModel
     {
         private readonly SignInManager<Admin> _signInManager;
-        private readonly IAdminService _adminService; // Dodaj serwis
 
-        public LoginAdminModel(SignInManager<Admin> signInManager, IAdminService adminService)
+        public LoginAdminModel(SignInManager<Admin> signInManager)
         {
             _signInManager = signInManager;
-            _adminService = adminService; // Przypisz serwis
         }
 
         [BindProperty]
