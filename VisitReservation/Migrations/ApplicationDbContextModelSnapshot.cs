@@ -146,6 +146,11 @@ namespace VisitReservation.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -158,7 +163,9 @@ namespace VisitReservation.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator<string>("UserType").HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -223,13 +230,6 @@ namespace VisitReservation.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "1",
-                            RoleId = "3"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -324,23 +324,6 @@ namespace VisitReservation.Migrations
                     b.HasKey("EducationId");
 
                     b.ToTable("Educations");
-
-                    b.HasData(
-                        new
-                        {
-                            EducationId = 1,
-                            University = "Uniwersytet Medyczny w Warszawie"
-                        },
-                        new
-                        {
-                            EducationId = 2,
-                            University = "Uniwersytet Medyczny w Krakowie"
-                        },
-                        new
-                        {
-                            EducationId = 3,
-                            University = "Gdański Uniwersytet Medyczny"
-                        });
                 });
 
             modelBuilder.Entity("VisitReservation.Models.LinkTables.DoctorEducation", b =>
@@ -421,23 +404,6 @@ namespace VisitReservation.Migrations
                     b.HasKey("MedicalServiceId");
 
                     b.ToTable("MedicalServices");
-
-                    b.HasData(
-                        new
-                        {
-                            MedicalServiceId = 1,
-                            Name = "Badanie EKG"
-                        },
-                        new
-                        {
-                            MedicalServiceId = 2,
-                            Name = "USG jamy brzusznej"
-                        },
-                        new
-                        {
-                            MedicalServiceId = 3,
-                            Name = "Konsultacja onkologiczna"
-                        });
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Report", b =>
@@ -521,23 +487,6 @@ namespace VisitReservation.Migrations
                     b.HasKey("SpecializationId");
 
                     b.ToTable("Specializations");
-
-                    b.HasData(
-                        new
-                        {
-                            SpecializationId = 1,
-                            Name = "Kardiologia"
-                        },
-                        new
-                        {
-                            SpecializationId = 2,
-                            Name = "Neurologia"
-                        },
-                        new
-                        {
-                            SpecializationId = 3,
-                            Name = "Pediatria"
-                        });
                 });
 
             modelBuilder.Entity("VisitReservation.Models.TreatedDisease", b =>
@@ -555,35 +504,25 @@ namespace VisitReservation.Migrations
                     b.HasKey("TreatedDiseaseId");
 
                     b.ToTable("TreatedDiseases");
-
-                    b.HasData(
-                        new
-                        {
-                            TreatedDiseaseId = 1,
-                            Name = "Cukrzyca"
-                        },
-                        new
-                        {
-                            TreatedDiseaseId = 2,
-                            Name = "Astma"
-                        },
-                        new
-                        {
-                            TreatedDiseaseId = 3,
-                            Name = "Choroba Parkinsona"
-                        });
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Account", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.HasDiscriminator().HasValue("Account");
+                });
+
+            modelBuilder.Entity("VisitReservation.Models.Admin", b =>
+                {
+                    b.HasBaseType("VisitReservation.Models.Account");
+
+                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Doctor", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.HasBaseType("VisitReservation.Models.Account");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -596,42 +535,17 @@ namespace VisitReservation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Doctors", (string)null);
+                    b.HasDiscriminator().HasValue("Doctor");
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Patient", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.HasBaseType("VisitReservation.Models.Account");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.ToTable("Patients", (string)null);
-                });
-
-            modelBuilder.Entity("VisitReservation.Models.Admin", b =>
-                {
-                    b.HasBaseType("VisitReservation.Models.Account");
-
-                    b.ToTable("Admins", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "574efcda-5cc6-4501-93fb-3a8a4b3b3fee",
-                            Email = "admin@admin.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAENStlEmoYoLO8E1T1vcUvr28q/fDaq18rbRuo/l/O7j5NMvbnSUFeZNM3Wk0HO5d6A==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
+                    b.HasDiscriminator().HasValue("Patient");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -823,42 +737,6 @@ namespace VisitReservation.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("VisitReservation.Models.Account", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("VisitReservation.Models.Account", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VisitReservation.Models.Doctor", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("VisitReservation.Models.Doctor", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VisitReservation.Models.Patient", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("VisitReservation.Models.Patient", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VisitReservation.Models.Admin", b =>
-                {
-                    b.HasOne("VisitReservation.Models.Account", null)
-                        .WithOne()
-                        .HasForeignKey("VisitReservation.Models.Admin", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Education", b =>

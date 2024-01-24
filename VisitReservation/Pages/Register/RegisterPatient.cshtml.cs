@@ -9,7 +9,7 @@ namespace VisitReservation.Pages.Register
 {
     public class RegisterPatientModel : PageModel
     {
-        private readonly UserManager<Patient> _userManager;
+        private readonly UserManager<Account> _userManager;
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -21,7 +21,7 @@ namespace VisitReservation.Pages.Register
             public DateTime DateOfBirth { get; set; }
         }
 
-        public RegisterPatientModel(UserManager<Patient> userManager)
+        public RegisterPatientModel(UserManager<Account> userManager)
         {
             _userManager = userManager;
         }
@@ -40,8 +40,7 @@ namespace VisitReservation.Pages.Register
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Patient");
-                    // Dodatkowe akcje po pomyœlnej rejestracji, np. logowanie
-                    return RedirectToPage("Index");
+                    // return RedirectToPage("Index");
                 }
                 foreach (var error in result.Errors)
                 {

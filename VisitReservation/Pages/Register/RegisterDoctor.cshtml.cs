@@ -10,7 +10,7 @@ namespace VisitReservation.Pages.Register
 {
     public class RegisterDoctorModel : PageModel
     {
-        private readonly UserManager<Doctor> _userManager;
+        private readonly UserManager<Account> _userManager;
         private readonly IEducationService _educationService;
         private readonly ISpecializationService _specializationService;
         private readonly ITreatedDiseaseService _treatedDiseaseService;
@@ -48,7 +48,7 @@ namespace VisitReservation.Pages.Register
 
 
 
-        public RegisterDoctorModel(UserManager<Doctor> userManager,
+        public RegisterDoctorModel(UserManager<Account> userManager,
                                    IEducationService educationService,
                                    ISpecializationService specializationService,
                                    IMedicalServiceService medicalServiceService,

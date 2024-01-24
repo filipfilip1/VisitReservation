@@ -37,10 +37,13 @@ namespace VisitReservation.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Account>(entity => { entity.ToTable("Accounts"); });
-            builder.Entity<Patient>(entity => { entity.ToTable("Patients"); });
-            builder.Entity<Doctor>(entity => { entity.ToTable("Doctors"); });
-            builder.Entity<Admin>(entity => { entity.ToTable("Admins"); });
+
+            // tworzenie Dyskryminatora do tabeli Account
+            builder.Entity<Account>()
+                .HasDiscriminator<string>("UserType")
+                .HasValue<Doctor>("Doctor")
+                .HasValue<Patient>("Patient")
+                .HasValue<Admin>("Admin");
 
             // początkowe tworzenie ról
             builder.Entity<IdentityRole>().HasData(
@@ -48,7 +51,6 @@ namespace VisitReservation.Data
                 new IdentityRole { Id = "2", Name = "Doctor", NormalizedName = "DOCTOR" },
                 new IdentityRole { Id = "3", Name = "Admin", NormalizedName = "ADMIN" }
             );
-
 
             // tworzenie relacji wiele do wielu
             // relacja wiele do wielu Doctor - Specialization
@@ -153,59 +155,6 @@ namespace VisitReservation.Data
             builder.Entity<Review>()
                 .Property(r => r.Rating)
                 .HasColumnType("decimal(2, 1)");
-
-
-            // Seedowanie początkowych danych
-            builder.Entity<Specialization>().HasData(
-                new Specialization { SpecializationId = 1, Name = "Kardiologia" },
-                new Specialization { SpecializationId = 2, Name = "Neurologia" },
-                new Specialization { SpecializationId = 3, Name = "Pediatria" }
-            );
-
-            builder.Entity<Education>().HasData(
-                new Education { EducationId = 1, University = "Uniwersytet Medyczny w Warszawie" },
-                new Education { EducationId = 2, University = "Uniwersytet Medyczny w Krakowie" },
-                new Education { EducationId = 3, University = "Gdański Uniwersytet Medyczny" }
-            );
-
-            builder.Entity<MedicalService>().HasData(
-                new MedicalService { MedicalServiceId = 1, Name = "Badanie EKG" },
-                new MedicalService { MedicalServiceId = 2, Name = "USG jamy brzusznej" },
-                new MedicalService { MedicalServiceId = 3, Name = "Konsultacja onkologiczna" }
-            );
-
-            builder.Entity<TreatedDisease>().HasData(
-                new TreatedDisease { TreatedDiseaseId = 1, Name = "Cukrzyca" },
-                new TreatedDisease { TreatedDiseaseId = 2, Name = "Astma" },
-                new TreatedDisease { TreatedDiseaseId = 3, Name = "Choroba Parkinsona" }
-            );
-
-            // Tworzenie zahashowanego hasła dla admina
-            var passwordHasher = new PasswordHasher<Admin>();
-            var hashedPassword = passwordHasher.HashPassword(null, "admin");
-
-            // Tworzenie początkowego użytkownika admin
-            builder.Entity<Admin>().HasData(
-                new Admin
-                {
-                    Id = "1",
-                    UserName = "admin",
-                    NormalizedUserName = "ADMIN",
-                    Email = "admin@admin.com",
-                    NormalizedEmail = "ADMIN@ADMIN.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = hashedPassword,
-                    SecurityStamp = string.Empty
-                }
-            );
-
-            builder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>
-                {
-                    RoleId = "3",
-                    UserId = "1"
-                }
-            );
         }
     }
 }

@@ -3,7 +3,7 @@ using VisitReservation.Models.LinkTables;
 
 namespace VisitReservation.Models
 {
-    public class Doctor : IdentityUser
+    public class Doctor : Account
     {
         public string Description {  get; set; }
         public string WorkAddress { get; set; }

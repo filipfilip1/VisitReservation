@@ -21,10 +21,6 @@ builder.Services.AddDefaultIdentity<Account>(options => options.SignIn.RequireCo
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager<SignInManager<Account>>();
 
-builder.Services.AddIdentityCore<Patient>().AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddIdentityCore<Doctor>().AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddIdentityCore<Admin>().AddEntityFrameworkStores<ApplicationDbContext>();
-
 
 // Konfiguracja Razor Pages
 builder.Services.AddRazorPages();
@@ -45,6 +41,17 @@ builder.Services.AddScoped<IDoctorService, DoctorService>();
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<Account>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    await ApplicationDbInitializer.SeedData(context, userManager, roleManager);
+}
+
 
 // Konfiguracja potoku ¿¹dañ HTTP.
 if (app.Environment.IsDevelopment())

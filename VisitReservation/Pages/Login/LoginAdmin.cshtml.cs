@@ -11,9 +11,9 @@ namespace VisitReservation.Pages.Login
     [AllowAnonymous]
     public class LoginAdminModel : PageModel
     {
-        private readonly SignInManager<Admin> _signInManager;
+        private readonly SignInManager<Account> _signInManager;
 
-        public LoginAdminModel(SignInManager<Admin> signInManager)
+        public LoginAdminModel(SignInManager<Account> signInManager)
         {
             _signInManager = signInManager;
         }
@@ -38,11 +38,21 @@ namespace VisitReservation.Pages.Login
 
             if (ModelState.IsValid)
             {
-
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return LocalRedirect(returnUrl);
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    if (user != null && await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        // Jeœli u¿ytkownik nie jest adminem, wyloguj go.
+                        await _signInManager.SignOutAsync();
+                        ModelState.AddModelError(string.Empty, "Tylko administratorzy maj¹ dostêp do tej strony.");
+                        return Page();
+                    }
                 }
                 else
                 {
@@ -53,5 +63,6 @@ namespace VisitReservation.Pages.Login
 
             return Page();
         }
+
     }
 }
