@@ -1,0 +1,18 @@
+﻿@page
+@model VisitReservation.Pages.AppointmentDetails.AppointmentDetailsModel
+@{
+}
+
+<h2>Appointment Details</h2>
+
+@if (Model.Appointment != null)
+{
+    <p>
+        <strong>Date:</strong> @Model.Appointment.AppointmentDataTime<br />
+        <strong>Status:</strong> @Model.Appointment.AppointmentStatus<br />
+        <strong>Patient:</strong> @Model.Appointment.Patient.UserName<br />
+        <strong>Doctor:</strong> @Model.Appointment.Doctor.UserName<br />
+    </p>
+
+    <!-- Tutaj można dodać więcej szczegółów wizyty oraz akcje zależne od roli użytkownika -->
+}

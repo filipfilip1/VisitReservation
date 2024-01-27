@@ -1,0 +1,30 @@
+﻿@page
+@model VisitReservation.Pages.AdminDashboard.HomeModel
+@{
+}
+
+<h2>Dashboard Admina</h2>
+
+<h3>Użytkownicy do Zatwierdzenia</h3>
+@foreach (var user in Model.UsersToApprove)
+{
+    <div>
+        <span>@user.UserName</span>
+        <form method="post">
+            <input type="hidden" name="userId" value="@user.Id" />
+            <button type="submit" name="action" value="approve">Zatwierdź jako SuperUser</button>
+        </form>
+    </div>
+}
+
+<h3>Zgłoszenia do Rozpatrzenia</h3>
+@foreach (var report in Model.ReportsToReview)
+{
+    <div>
+        <span>@report.Title</span>
+        <form method="post">
+            <input type="hidden" name="reportId" value="@report.?Id" />
+            <button type="submit" name="action" value="review">Rozpatrz Zgłoszenie</button>
+        </form>
+    </div>
+}

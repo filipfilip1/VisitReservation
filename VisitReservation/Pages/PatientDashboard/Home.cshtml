@@ -1,0 +1,60 @@
+﻿@page
+@model VisitReservation.Pages.PatientDashboard.HomeModel
+@{
+    ViewData["Title"] = "Dashboard Pacjenta";
+}
+
+<h2>Dashboard Pacjenta</h2>
+
+<p>Witaj, @User.Identity.Name</p>
+
+<h3>Historia Wizyt</h3>
+@if (Model.PastAppointments.Any())
+{
+    foreach (var appointment in Model.PastAppointments)
+    {
+        <div>
+            <span>Data: @appointment.Date</span> - <span>Lekarz: @appointment.DoctorName</span><br/>
+            Notatki: @appointment.Notes
+        </div>
+    }
+}
+else
+{
+    <p>Brak przeszłych wizyt.</p>
+}
+
+<h3>Nadchodzące Wizyty</h3>
+@if (Model.UpcomingAppointments.Any())
+{
+    foreach (var appointment in Model.UpcomingAppointments)
+    {
+        <div>
+            <span>Data: @appointment.Date</span> - <span>Lekarz: @appointment.DoctorName</span><br/>
+            <button type="button">Odwołaj</button>
+        </div>
+    }
+}
+else
+{
+    <p>Brak nadchodzących wizyt.</p>
+}
+
+<h3>Umów Wizytę</h3>
+<!-- Formularz umówienia wizyty -->
+
+<h3>Twoje Opinie</h3>
+@if (Model.Reviews.Any())
+{
+    foreach (var review in Model.Reviews)
+    {
+        <div>
+            <span>Lekarz: @review.DoctorName</span> - <span>Ocena: @review.Rating</span><br/>
+            Komentarz: @review.Comment
+        </div>
+    }
+}
+else
+{
+    <p>Brak wystawionych opinii.</p>
+}
