@@ -1,0 +1,34 @@
+﻿@page
+@model VisitReservation.Pages.DoctorDashboard.DoctorScheduleModel
+@{
+    ViewData["Title"] = "Ustaw Harmonogram";
+}
+
+<h2>Ustaw Harmonogram</h2>
+
+<form method="post">
+    <div>
+        <label>Dni tygodnia, w których jesteś dostępny:</label>
+        @foreach (var day in Enum.GetValues(typeof(DayOfWeek)))
+        {
+            <input type="checkbox" asp-for="AvailableDays" value="@day" /> @day <br />
+        }
+    </div>
+
+    <div>
+        <label>Godzina rozpoczęcia:</label>
+        <input type="time" asp-for="StartTime" />
+    </div>
+
+    <div>
+        <label>Godzina zakończenia:</label>
+        <input type="time" asp-for="EndTime" />
+    </div>
+
+    <div>
+        <label>Na ile tygodni do przodu:</label>
+        <input type="number" asp-for="WeeksForward" min="1" max="52" />
+    </div>
+
+    <button type="submit">Ustaw harmonogram</button>
+</form>

@@ -1,0 +1,16 @@
+﻿@page
+@model VisitReservation.Pages.Appointments.EditModel
+@{
+}
+
+<h2>Edit Appointment</h2>
+
+<form method="post">
+    <input asp-for="Appointment.AppointmentId" type="hidden" />
+    <div>
+        <label asp-for="Appointment.AppointmentDateTime">Date:</label>
+        <input asp-for="Appointment.AppointmentDateTime" type="datetime-local" />
+        <span asp-validation-for="Appointment.AppointmentDateTime"></span>
+    </div>
+    <button type="submit">Update</button>
+</form>

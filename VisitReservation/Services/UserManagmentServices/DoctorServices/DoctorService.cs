@@ -6,29 +6,29 @@ namespace VisitReservation.Services.UserManagmentServices.DoctorServices
 {
     public class DoctorService : IDoctorService
     {
-        private readonly UserManager<Doctor> _userManager;
+        private readonly UserManager<Account> _userManager;
 
-        public DoctorService(UserManager<Doctor> userManager)
+        public DoctorService(UserManager<Account> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<Doctor> GetDoctorByIdAsync(string doctorId)
+        public async Task<Account> GetDoctorByIdAsync(string doctorId)
         {
             return await _userManager.FindByIdAsync(doctorId);
         }
 
-        public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
+        public async Task<IEnumerable<Account>> GetAllDoctorsAsync()
         {
             return await _userManager.Users.ToListAsync();
         }
 
-        public async Task<IdentityResult> CreateDoctorAsync(Doctor doctor, string password)
+        public async Task<IdentityResult> CreateDoctorAsync(Account doctor, string password)
         {
             return await _userManager.CreateAsync(doctor, password);
         }
 
-        public async Task<IdentityResult> UpdateDoctorAsync(Doctor doctor)
+        public async Task<IdentityResult> UpdateDoctorAsync(Account doctor)
         {
             return await _userManager.UpdateAsync(doctor);
         }

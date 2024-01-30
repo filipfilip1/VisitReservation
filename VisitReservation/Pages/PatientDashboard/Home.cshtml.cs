@@ -7,7 +7,7 @@ using VisitReservation.Data;
 namespace VisitReservation.Pages.PatientDashboard
 {
 
-    {
+    
         public class HomeModel : PageModel
         {
             private readonly UserManager<IdentityUser> _userManager;
@@ -43,7 +43,7 @@ namespace VisitReservation.Pages.PatientDashboard
             {
                 // Implementacja metody do pobierania przesz³ych wizyt
                 PastAppointments = _context.Appointments
-                    .Where(a => a.PatientId == userId && a.Date < DateTime.Now)
+                    .Where(a => a.PatientId == userId && a.AppointmentDateTime < DateTime.Now)
                     .ToList();
             }
 
@@ -51,7 +51,7 @@ namespace VisitReservation.Pages.PatientDashboard
             {
                 // Implementacja metody do pobierania nadchodz¹cych wizyt
                 UpcomingAppointments = _context.Appointments
-                    .Where(a => a.PatientId == userId && a.Date >= DateTime.Now)
+                    .Where(a => a.PatientId == userId && a.AppointmentDateTime >= DateTime.Now)
                     .ToList();
             }
 

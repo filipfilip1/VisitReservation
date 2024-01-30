@@ -4,6 +4,7 @@
     ViewData["Title"] = "Dashboard Pacjenta";
 }
 
+
 <h2>Dashboard Pacjenta</h2>
 
 <p>Witaj, @User.Identity.Name</p>
@@ -14,8 +15,8 @@
     foreach (var appointment in Model.PastAppointments)
     {
         <div>
-            <span>Data: @appointment.Date</span> - <span>Lekarz: @appointment.DoctorName</span><br/>
-            Notatki: @appointment.Notes
+            <span>Data: @appointment.AppointmentDateTime.ToString("dd-MM-yyyy HH:mm")</span>
+            <span>Lekarz: @appointment.Doctor.UserName</span>
         </div>
     }
 }
@@ -30,8 +31,9 @@ else
     foreach (var appointment in Model.UpcomingAppointments)
     {
         <div>
-            <span>Data: @appointment.Date</span> - <span>Lekarz: @appointment.DoctorName</span><br/>
-            <button type="button">Odwołaj</button>
+            <span>Data: @appointment.AppointmentDateTime.ToString("dd-MM-yyyy HH:mm")</span>
+            <span>Lekarz: @appointment.Doctor.UserName</span>
+            <a asp-page="/Appointments/Delete" asp-route-id="@appointment.AppointmentId">Odwołaj</a>
         </div>
     }
 }
@@ -41,15 +43,18 @@ else
 }
 
 <h3>Umów Wizytę</h3>
-<!-- Formularz umówienia wizyty -->
+<!-- Tutaj można umieścić formularz umówienia nowej wizyty -->
 
+@* Zakomentowana sekcja dotycząca opinii *@
+@*
 <h3>Twoje Opinie</h3>
 @if (Model.Reviews.Any())
 {
     foreach (var review in Model.Reviews)
     {
         <div>
-            <span>Lekarz: @review.DoctorName</span> - <span>Ocena: @review.Rating</span><br/>
+            <span>Lekarz: @review.DoctorName</span>
+            <span>Ocena: @review.Rating</span><br/>
             Komentarz: @review.Comment
         </div>
     }
@@ -58,3 +63,4 @@ else
 {
     <p>Brak wystawionych opinii.</p>
 }
+*@

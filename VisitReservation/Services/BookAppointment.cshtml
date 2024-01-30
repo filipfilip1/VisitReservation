@@ -1,0 +1,38 @@
+﻿@page
+@model VisitReservation.Services.BookAppointmentModel
+
+@{
+    ViewData["Title"] = "Rezerwacja wizyty";
+}
+
+<h2>Rezerwacja wizyty</h2>
+
+@if (Model.SuccessMessage != null)
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form method="post" asp-page="/PatientDashboard/BookAppointment">
+    <div class="form-group">
+        <label for="DoctorId">ID Lekarza:</label>
+        <input type="text" class="form-control" id="DoctorId" name="DoctorId" readonly value="@Model.Appointment.DoctorId" />
+    </div>
+
+    <div class="form-group">
+        <label for="Date">Data:</label>
+        <input type="date" class="form-control" id="Date" name="Date" readonly value="@Model.Appointment.AppointmentDateTime.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="form-group">
+        <label for="Time">Godzina:</label>
+        <input type="time" class="form-control" id="Time" name="Time" readonly value="@Model.Appointment.AppointmentDateTime.ToString("HH:mm")" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Umów wizytę</button>
+</form>
+

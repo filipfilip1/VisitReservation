@@ -5,10 +5,10 @@ namespace VisitReservation.Services.UserManagmentServices.DoctorServices
 {
     public interface IDoctorService
     {
-        Task<Doctor> GetDoctorByIdAsync(string doctorId);
-        Task<IEnumerable<Doctor>> GetAllDoctorsAsync();
-        Task<IdentityResult> CreateDoctorAsync(Doctor doctor, string password);
-        Task<IdentityResult> UpdateDoctorAsync(Doctor doctor);
+        Task<Account> GetDoctorByIdAsync(string doctorId);
+        Task<IEnumerable<Account>> GetAllDoctorsAsync();
+        Task<IdentityResult> CreateDoctorAsync(Account doctor, string password);
+        Task<IdentityResult> UpdateDoctorAsync(Account doctor);
         Task<IdentityResult> DeleteDoctorAsync(string doctorId);
     }
 

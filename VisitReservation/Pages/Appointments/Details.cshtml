@@ -1,0 +1,28 @@
+﻿@page
+@model VisitReservation.Pages.AppointmentDetails.DetailsModel
+
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<h2>Appointment Details</h2>
+
+@if (Model.Appointment != null)
+{
+    <p>
+        <strong>Date:</strong> @Model.Appointment.AppointmentDateTime<br />
+        <strong>Status:</strong> @Model.Appointment.AppointmentStatus<br />
+        <strong>Patient:</strong> @Model.Appointment.Patient.UserName<br />
+        <strong>Doctor:</strong> @Model.Appointment.Doctor.UserName<br />
+    </p>
+
+
+    <a asp-page="/Appointments/Edit" asp-route-appointmentId="@Model.Appointment.AppointmentId" class="btn btn-primary">Edit Appointment</a>
+    <a asp-page="/Appointments/Delete" asp-route-appointmentId="@Model.Appointment.AppointmentId" class="btn btn-danger">Delete Appointment</a>
+
+    <!-- w tym miejscu można dodać więcej szczegółów wizyty oraz akcje zależne od roli użytkownika -->
+}
+else
+{
+    <p>Appointment details are not available.</p>
+}

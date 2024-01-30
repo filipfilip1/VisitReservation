@@ -15,7 +15,7 @@ namespace VisitReservation.Models
         public ICollection<DoctorTreatedDisease> DoctorTreatedDiseases { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Appointment> Appointments { get; set; }   
-        public ICollection<DoctorAvailability> Availabilities { get; set; }
+        public ICollection<DoctorAppointmentSlot> Availabilities { get; set; }
         public ICollection<Report> Reports { get; set; }
     }
 

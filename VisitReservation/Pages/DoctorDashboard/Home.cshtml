@@ -6,13 +6,16 @@
 
 <h2>Dashboard Doktora</h2>
 
-@if (Model.PastVisits != null && Model.PastVisits.Any())
+<a asp-page="/Doctor/Schedule" class="btn btn-primary">Ustaw swój harmonogram</a>
+
+
+@if (Model.PastAppointments != null && Model.PastAppointments.Any())
 {
     <h3>Historia Wizyt</h3>
     <ul>
-        @foreach (var visit in Model.PastVisits)
+        @foreach (var appointment in Model.PastAppointments)
         {
-            <li>@visit.Date: @visit.PatientName - @visit.Description</li>
+            <li>@appointment.AppointmentDateTime: Pacjent - @appointment.Patient.UserName</li>
         }
     </ul>
 }
@@ -21,13 +24,13 @@ else
     <p>Brak przeszłych wizyt.</p>
 }
 
-@if (Model.UpcomingVisits != null && Model.UpcomingVisits.Any())
+@if (Model.UpcomingAppointments != null && Model.UpcomingAppointments.Any())
 {
     <h3>Nadchodzące Wizyty</h3>
     <ul>
-        @foreach (var visit in Model.UpcomingVisits)
+        @foreach (var appointment in Model.UpcomingAppointments)
         {
-            <li>@visit.Date: @visit.PatientName - @visit.Description</li>
+            <li>@appointment.AppointmentDateTime: Pacjent - @appointment.Patient.UserName</li>
         }
     </ul>
 }
@@ -36,13 +39,14 @@ else
     <p>Brak nadchodzących wizyt.</p>
 }
 
-@if (Model.Reviews != null && Model.Reviews.Any())
+@*
+    @if (Model.Reviews != null && Model.Reviews.Any())
 {
     <h3>Opinie Pacjentów</h3>
     <ul>
         @foreach (var review in Model.Reviews)
         {
-            <li>@review.PatientName: @review.Text</li>
+            <li>Pacjent: @review.PatientName - Opinia: @review.Text</li>
         }
     </ul>
 }
@@ -50,4 +54,4 @@ else
 {
     <p>Brak opinii.</p>
 }
-
+*@

@@ -1,0 +1,38 @@
+﻿@page
+@model VisitReservation.Pages.ViewDoctorScheduleModel
+
+@{
+    ViewData["Title"] = $"Harmonogram Lekarza - {Model.DoctorName}";
+}
+
+<h2>Harmonogram Lekarza - @Model.DoctorName</h2>
+
+<h3>Dostępne dni:</h3>
+<ul>
+    @foreach (var day in Model.AvailableDays)
+    {
+        <li>
+            <a asp-page="/PatientDashboard/ViewDoctorSchedule" asp-route-doctorId="@Model.DoctorId" asp-route-selectedDate="@day">
+                @day.ToShortDateString()
+            </a>
+        </li>
+    }
+</ul>
+
+@if (Model.SelectedDate.HasValue && Model.AvailableTimeSlots != null && Model.AvailableTimeSlots.Any())
+{
+    <h3>Dostępne godziny w dniu @Model.SelectedDate.Value.ToShortDateString():</h3>
+    <ul>
+        @foreach (var slot in Model.AvailableTimeSlots)
+        {
+            <li>
+                <form method="post" asp-page="/PatientDashboard/BookAppointment">
+                    <input type="hidden" name="DoctorId" value="@Model.DoctorId" />
+                    <input type="hidden" name="Date" value="@Model.SelectedDate.Value" />
+                    <input type="hidden" name="Time" value="@slot.StartTime" />
+                    <button type="submit">Umów wizytę na godzinę @slot.StartTime.ToShortTimeString()</button>
+                </form>
+            </li>
+        }
+    </ul>
+}

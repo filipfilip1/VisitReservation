@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VisitReservation.Data;
 using VisitReservation.Models;
+using VisitReservation.Services;
 using VisitReservation.Services.DataManagmentDoctor;
 using VisitReservation.Services.UserManagmentServices.AdminServices;
 using VisitReservation.Services.UserManagmentServices.DoctorServices;
@@ -31,10 +32,17 @@ builder.Services.AddScoped<IEducationService, EducationService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IMedicalServiceService, MedicalServiceService>();
 builder.Services.AddScoped<ITreatedDiseaseService, TreatedDiseaseService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IDoctorScheduleService, DoctorScheduleService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+
+builder.Services.AddHttpContextAccessor();
 /*
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
-builder.Services.AddScoped<IDoctorService, DoctorService>();
+
 */
 
 

@@ -261,7 +261,7 @@ namespace VisitReservation.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
 
-                    b.Property<DateTime>("AppointmentDataTime")
+                    b.Property<DateTime>("AppointmentDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("AppointmentStatus")
@@ -284,29 +284,34 @@ namespace VisitReservation.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("VisitReservation.Models.DoctorAvailability", b =>
+            modelBuilder.Entity("VisitReservation.Models.DoctorAppointmentSlot", b =>
                 {
-                    b.Property<int>("DoctorAvailabilityId")
+                    b.Property<int>("DoctorAppointmentSlotId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorAvailabilityId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorAppointmentSlotId"));
 
                     b.Property<string>("DoctorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("EndDateTime")
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.HasKey("DoctorAvailabilityId");
+                    b.HasKey("DoctorAppointmentSlotId");
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("DoctorAvailabilities");
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("DoctorAppointmentSlots");
                 });
 
             modelBuilder.Entity("VisitReservation.Models.Education", b =>
@@ -618,7 +623,7 @@ namespace VisitReservation.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("VisitReservation.Models.DoctorAvailability", b =>
+            modelBuilder.Entity("VisitReservation.Models.DoctorAppointmentSlot", b =>
                 {
                     b.HasOne("VisitReservation.Models.Doctor", "Doctor")
                         .WithMany("Availabilities")
@@ -626,7 +631,13 @@ namespace VisitReservation.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("VisitReservation.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
                     b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("VisitReservation.Models.LinkTables.DoctorEducation", b =>

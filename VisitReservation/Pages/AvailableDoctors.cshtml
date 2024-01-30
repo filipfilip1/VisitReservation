@@ -1,0 +1,23 @@
+﻿@page
+@model VisitReservation.Pages.AvailableDoctorsModel
+@{
+    ViewData["Title"] = "Dostępni Lekarze";
+}
+
+<h2>Dostępni Lekarze</h2>
+
+@if (Model.AvailableDoctors != null && Model.AvailableDoctors.Any())
+{
+    <ul>
+        @foreach (var doctor in Model.AvailableDoctors)
+        {
+            <li>
+                <a asp-page="/PatientDashboard/ViewDoctorSchedule" asp-route-doctorId="@doctor.Id">@doctor.UserName</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Brak dostępnych lekarzy.</p>
+}
