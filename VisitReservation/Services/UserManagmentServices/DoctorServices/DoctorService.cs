@@ -20,7 +20,7 @@ namespace VisitReservation.Services.UserManagmentServices.DoctorServices
 
         public async Task<IEnumerable<Account>> GetAllDoctorsAsync()
         {
-            return await _userManager.Users.ToListAsync();
+            return await _userManager.GetUsersInRoleAsync("Doctor");
         }
 
         public async Task<IdentityResult> CreateDoctorAsync(Account doctor, string password)

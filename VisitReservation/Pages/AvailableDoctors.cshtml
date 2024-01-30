@@ -12,7 +12,7 @@
         @foreach (var doctor in Model.AvailableDoctors)
         {
             <li>
-                <a asp-page="/PatientDashboard/ViewDoctorSchedule" asp-route-doctorId="@doctor.Id">@doctor.UserName</a>
+                <a asp-page="/ViewDoctorSchedule" asp-route-doctorId="@doctor.Id">@doctor.UserName</a>
             </li>
         }
     </ul>

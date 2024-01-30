@@ -6,14 +6,12 @@ using VisitReservation.Data;
 
 namespace VisitReservation.Pages.PatientDashboard
 {
-
-    
         public class HomeModel : PageModel
         {
-            private readonly UserManager<IdentityUser> _userManager;
-            private readonly ApplicationDbContext _context; // Za³ó¿my, ¿e to jest kontekst bazy danych
+            private readonly UserManager<Account> _userManager;
+            private readonly ApplicationDbContext _context; 
 
-            public HomeModel(UserManager<IdentityUser> userManager, ApplicationDbContext context)
+            public HomeModel(UserManager<Account> userManager, ApplicationDbContext context)
             {
                 _userManager = userManager;
                 _context = context;

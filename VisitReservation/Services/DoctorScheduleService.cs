@@ -38,6 +38,11 @@ namespace VisitReservation.Services
             while (startTime < end)
             {
                 var endTime = startTime.AddMinutes(AppointmentDurationMinutes);
+                if (endTime > end)
+                {
+                    break;
+                }
+
                 slots.Add(new DoctorAppointmentSlot
                 {
                     DoctorId = doctorId,
@@ -50,6 +55,8 @@ namespace VisitReservation.Services
 
             return slots;
         }
+
+
         public async Task SetDoctorWeeklyScheduleAsync(string doctorId, List<DayOfWeek> availableDays, TimeSpan startTime, TimeSpan endTime, int weeksForward)
         {
             var currentDate = DateTime.Today;
@@ -59,12 +66,18 @@ namespace VisitReservation.Services
             {
                 if (availableDays.Contains(date.DayOfWeek))
                 {
-                    var startDateTime = date + startTime;
-                    var endDateTime = date + endTime;
-                    await CreateScheduleSlotsAsync(doctorId, startDateTime, endDateTime);
+                    // Ustawianie początku i końca slotów dla danego dnia
+                    var startDateTime = date.Date + startTime; // Uwzględnienie tylko daty, bez czasu
+                    var endDateTime = date.Date + endTime; // Koniec pracy lekarza w danym dniu
+
+                    if (endDateTime > startDateTime)
+                    {
+                        await CreateScheduleSlotsAsync(doctorId, startDateTime, endDateTime);
+                    }
                 }
             }
         }
+
 
         public async Task<string> GetDoctorNameAsync(string doctorId)
         {

@@ -16,11 +16,13 @@ namespace VisitReservation.Pages.AdminDashboard
         public HomeModel(UserManager<Account> userManager /*IReportService reportService*/)
         {
             _userManager = userManager;
+            // utworzenie tej listy zapobiega odwo³ywaniu siê do null po zatwierdzeniu lekarza
+            UsersToApprove = new List<Account>();
             // _reportService = reportService;
         }
 
         public List<Account> UsersToApprove { get; set; }
-        public List<Report> ReportsToReview { get; set; } // Lista zg³oszeñ
+        public List<Report> ReportsToReview { get; set; } 
 
         public async Task OnGetAsync()
         {
@@ -49,6 +51,7 @@ namespace VisitReservation.Pages.AdminDashboard
             return RedirectToPage();
         }
 
+        /*
         public async Task<IActionResult> OnPostReviewAsync(string reportId)
         {
             // Logika obs³ugi zg³oszeñ
@@ -56,5 +59,6 @@ namespace VisitReservation.Pages.AdminDashboard
 
             return RedirectToPage();
         }
+        */
     }
 }

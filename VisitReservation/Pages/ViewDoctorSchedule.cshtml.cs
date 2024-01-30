@@ -27,14 +27,16 @@ namespace VisitReservation.Pages
             _bookingService = bookingService;
         }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string doctorId, DateTime? selectedDate = null)
         {
+            DoctorId = doctorId;
             DoctorName = await _doctorScheduleService.GetDoctorNameAsync(DoctorId);
             AvailableDays = await _doctorScheduleService.GetAvailableDaysForDoctorAsync(DoctorId);
 
-            if (SelectedDate.HasValue)
+            if (selectedDate.HasValue)
             {
-                AvailableTimeSlots = await _bookingService.GetAvailableTimeSlotsForDayAsync(SelectedDate.Value, DoctorId);
+                SelectedDate = selectedDate;
+                AvailableTimeSlots = await _bookingService.GetAvailableTimeSlotsForDayAsync(selectedDate.Value, DoctorId);
             }
         }
     }

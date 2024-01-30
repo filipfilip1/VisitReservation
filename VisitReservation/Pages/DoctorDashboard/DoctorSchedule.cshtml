@@ -9,9 +9,12 @@
 <form method="post">
     <div>
         <label>Dni tygodnia, w których jesteś dostępny:</label>
-        @foreach (var day in Enum.GetValues(typeof(DayOfWeek)))
+        @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
         {
-            <input type="checkbox" asp-for="AvailableDays" value="@day" /> @day <br />
+            <input type="checkbox" name="AvailableDays" value="@day" id="day-@day" />
+            <label for="day-@day">@day</label>
+
+            <br />
         }
     </div>
 

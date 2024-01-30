@@ -31,6 +31,13 @@ namespace VisitReservation.Pages.DoctorDashboard
         [BindProperty]
         public int WeeksForward { get; set; } // Na ile tygodni do przodu ma obowi¹zywaæ harmonogram
 
+        public void OnGet()
+        {
+            // Inicjalizacja domyœlnych wartoœci lub wczytanie istniej¹cego harmonogramu
+            // Mo¿na tutaj wczytaæ aktualny harmonogram lekarza (jeœli istnieje)
+            // i ustawiæ w³aœciwoœci AvailableDays, StartTime, EndTime, WeeksForward
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -42,15 +49,11 @@ namespace VisitReservation.Pages.DoctorDashboard
             if (currentUser is Doctor doctor)
             {
                 await _doctorScheduleService.SetDoctorWeeklyScheduleAsync(doctor.Id, AvailableDays, StartTime, EndTime, WeeksForward);
-                return RedirectToPage("/Doctor/Home"); // Przekierowanie do strony g³ównej lekarza
+                return RedirectToPage("/DoctorDashboard/Home"); // Przekierowanie do strony g³ównej lekarza
             }
 
             return Unauthorized(); // W przypadku, gdy u¿ytkownik nie jest lekarzem
         }
-
-        public void OnGet()
-        {
-            // Inicjalizacja domyœlnych wartoœci lub wczytanie istniej¹cego harmonogramu
-        }
     }
 }
+

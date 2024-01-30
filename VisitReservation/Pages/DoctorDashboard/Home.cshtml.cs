@@ -10,11 +10,11 @@ namespace VisitReservation.Pages.DoctorDashboard
 {
     public class HomeModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Account> _userManager;
         private readonly IAppointmentService _appointmentService;
         private readonly ApplicationDbContext _context;
 
-        public HomeModel(UserManager<IdentityUser> userManager, IAppointmentService appointmentService, ApplicationDbContext context)
+        public HomeModel(UserManager<Account> userManager, IAppointmentService appointmentService, ApplicationDbContext context)
         {
             _userManager = userManager;
             _appointmentService = appointmentService;

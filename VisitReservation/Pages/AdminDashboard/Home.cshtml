@@ -6,16 +6,25 @@
 <h2>Dashboard Admina</h2>
 
 <h3>Użytkownicy do Zatwierdzenia</h3>
-@foreach (var user in Model.UsersToApprove)
+@if (Model.UsersToApprove != null && Model.UsersToApprove.Any())
 {
-    <div>
-        <span>@user.UserName</span>
-        <form method="post">
-            <input type="hidden" name="userId" value="@user.Id" />
-            <button type="submit" name="action" value="approve">Zatwierdź jako SuperUser</button>
-        </form>
-    </div>
+    @foreach (var user in Model.UsersToApprove)
+    {
+        <div>
+            <span>@user.UserName</span>
+            <form method="post">
+                <input type="hidden" name="userId" value="@user.Id" />
+                <button type="submit" asp-page-handler="Approve">Zatwierdź jako SuperUser</button>
+            </form>
+        </div>
+
+    }
 }
+else
+{
+    <p>Brak użytkowników do zatwierdzenia</p>
+}
+
 
 @*
     <h3>Zgłoszenia do Rozpatrzenia</h3>

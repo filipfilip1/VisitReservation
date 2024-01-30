@@ -12,9 +12,11 @@
     @foreach (var day in Model.AvailableDays)
     {
         <li>
-            <a asp-page="/PatientDashboard/ViewDoctorSchedule" asp-route-doctorId="@Model.DoctorId" asp-route-selectedDate="@day">
-                @day.ToShortDateString()
-            </a>
+            <form method="get" asp-page="/ViewDoctorSchedule">
+                <input type="hidden" name="doctorId" value="@Model.DoctorId" />
+                <input type="hidden" name="selectedDate" value="@day.ToString("yyyy-MM-dd")" />
+                <button type="submit">@day.ToShortDateString()</button>
+            </form>
         </li>
     }
 </ul>
