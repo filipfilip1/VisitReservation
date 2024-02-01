@@ -2,15 +2,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using VisitReservation.Models;
+using VisitReservation.Services;
 
-namespace VisitReservation.Services
+namespace VisitReservation.Pages
 {
     public class BookAppointmentModel : PageModel
     {
         private readonly IAppointmentService _appointmentService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Account> _userManager;
 
-        public BookAppointmentModel(IAppointmentService appointmentService, UserManager<IdentityUser> userManager)
+        public BookAppointmentModel(IAppointmentService appointmentService, UserManager<Account> userManager)
         {
             _appointmentService = appointmentService;
             _userManager = userManager;
@@ -24,6 +25,31 @@ namespace VisitReservation.Services
 
         [TempData]
         public string ErrorMessage { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(string doctorId, DateTime date, TimeSpan time)
+        {
+            // Sprawdzenie czy dane zosta³y przekazane
+            if (!string.IsNullOrEmpty(doctorId) && date != DateTime.MinValue && time != null)
+            {
+                Appointment = new Appointment
+                {
+                    DoctorId = doctorId,
+                    AppointmentDateTime = date.Add(time)
+                    // Ustaw pozosta³e wymagane pola, jeœli to konieczne
+                };
+
+                // Mo¿esz tak¿e za³adowaæ dodatkowe informacje, jeœli to potrzebne
+                // Na przyk³ad nazwê lekarza, szczegó³y o u¿ytkowniku itp.
+            }
+            else
+            {
+                // Ustawienie odpowiedniej wiadomoœci b³êdu lub przekierowanie
+                // w przypadku braku niektórych danych
+                return RedirectToPage();
+            }
+
+            return Page();
+        }
 
         public async Task<IActionResult> OnPostAsync(string doctorId, DateTime date, TimeSpan time)
         {
@@ -53,5 +79,7 @@ namespace VisitReservation.Services
 
             return Page();
         }
+
     }
+
 }

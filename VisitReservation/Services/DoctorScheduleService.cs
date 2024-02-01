@@ -35,13 +35,18 @@ namespace VisitReservation.Services
             var slots = new List<DoctorAppointmentSlot>();
             var startTime = start;
 
+            Console.WriteLine($"Rozpoczynam generowanie slotów. Start: {start}, Koniec: {end}");
+
             while (startTime < end)
             {
                 var endTime = startTime.AddMinutes(AppointmentDurationMinutes);
                 if (endTime > end)
                 {
+                    Console.WriteLine($"Zakończenie przedwcześnie: endTime ({endTime}) > end ({end})");
                     break;
                 }
+
+                Console.WriteLine($"Dodawanie slotu: Start: {startTime}, Koniec: {endTime}");
 
                 slots.Add(new DoctorAppointmentSlot
                 {
@@ -53,8 +58,10 @@ namespace VisitReservation.Services
                 startTime = endTime;
             }
 
+            Console.WriteLine($"Wygenerowano {slots.Count} slotów.");
             return slots;
         }
+
 
 
         public async Task SetDoctorWeeklyScheduleAsync(string doctorId, List<DayOfWeek> availableDays, TimeSpan startTime, TimeSpan endTime, int weeksForward)
@@ -67,7 +74,7 @@ namespace VisitReservation.Services
                 if (availableDays.Contains(date.DayOfWeek))
                 {
                     // Ustawianie początku i końca slotów dla danego dnia
-                    var startDateTime = date.Date + startTime; // Uwzględnienie tylko daty, bez czasu
+                    var startDateTime = date.Date + startTime; // początek pracy
                     var endDateTime = date.Date + endTime; // Koniec pracy lekarza w danym dniu
 
                     if (endDateTime > startDateTime)

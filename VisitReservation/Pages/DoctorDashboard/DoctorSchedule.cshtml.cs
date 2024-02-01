@@ -40,6 +40,9 @@ namespace VisitReservation.Pages.DoctorDashboard
 
         public async Task<IActionResult> OnPostAsync()
         {
+            Console.WriteLine($"StartTime: {StartTime}");
+            Console.WriteLine($"EndTime: {EndTime}");
+
             if (!ModelState.IsValid)
             {
                 return Page();

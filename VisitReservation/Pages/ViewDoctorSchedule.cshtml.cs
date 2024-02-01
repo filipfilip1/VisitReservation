@@ -18,7 +18,9 @@ namespace VisitReservation.Pages
         public DateTime? SelectedDate { get; set; }
 
         public string DoctorName { get; set; }
+        [BindProperty(SupportsGet = true)]
         public IList<DateTime> AvailableDays { get; set; }
+        [BindProperty(SupportsGet = true)]
         public IList<DoctorAppointmentSlot> AvailableTimeSlots { get; set; }
 
         public ViewDoctorScheduleModel(IDoctorScheduleService doctorScheduleService, IBookingService bookingService)
@@ -38,6 +40,12 @@ namespace VisitReservation.Pages
                 SelectedDate = selectedDate;
                 AvailableTimeSlots = await _bookingService.GetAvailableTimeSlotsForDayAsync(selectedDate.Value, DoctorId);
             }
+        }
+
+        public async Task<IActionResult> OnPostAsync(string doctorId, DateTime selectedDate, TimeSpan selectedTime)
+        {
+            // Przekieruje do strony rezerwacji wizyty, przekazuj¹c zebrane dane
+            return RedirectToPage("/BookAppointment", new { doctorId = doctorId, date = selectedDate, time = selectedTime });
         }
     }
 }

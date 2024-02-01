@@ -12,8 +12,8 @@ using VisitReservation.Data;
 namespace VisitReservation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240130124700_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240201090113_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

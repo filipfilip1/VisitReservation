@@ -70,26 +70,11 @@ namespace VisitReservation.Services
         // metoda generuje sloty czasowe od istniejących wizyt
         public async Task<IList<DoctorAppointmentSlot>> GetAvailableTimeSlotsForDayAsync(DateTime date, string doctorId)
         {
-            // Zakładamy, że jedna wizyta trwa 30 minut
-            var duration = TimeSpan.FromMinutes(30);
-
-            // Pobierz wszystkie wizyty lekarza w danym dniu
-            var appointments = await _context.Appointments
-                .Where(a => a.DoctorId == doctorId &&
-                            a.AppointmentDateTime.Date == date.Date)
+            return await _context.DoctorAppointmentSlots
+                .Where(slot => slot.DoctorId == doctorId &&
+                               slot.StartTime.Date == date.Date &&
+                               slot.Status == AppointmentSlotStatus.Available)
                 .ToListAsync();
-
-            // Generowanie dostępnych slotów czasowych
-            var slots = new List<DoctorAppointmentSlot>();
-            for (var time = date.Date; time < date.Date.AddDays(1); time = time.Add(duration))
-            {
-                if (!appointments.Any(a => a.AppointmentDateTime == time))
-                {
-                    slots.Add(new DoctorAppointmentSlot { StartTime = time });
-                }
-            }
-
-            return slots;
         }
 
         public async Task<IList<DateTime>> GetDistinctAvailableDaysForDoctorAsync(string doctorId)

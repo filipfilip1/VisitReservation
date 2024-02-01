@@ -5,9 +5,10 @@
     "\\VisitReservation\\Areas",
     "\\VisitReservation\\Areas\\Identity",
     "\\VisitReservation\\Areas\\Identity\\Pages",
+    "\\VisitReservation\\Migrations",
     "\\VisitReservation\\Pages",
     "\\VisitReservation\\Pages\\Shared"
   ],
-  "SelectedNode": "\\VisitReservation.sln",
+  "SelectedNode": "\\VisitReservation\\Migrations\\20240201090113_initialCreate.cs",
   "PreviewInSolutionExplorer": false
 }
