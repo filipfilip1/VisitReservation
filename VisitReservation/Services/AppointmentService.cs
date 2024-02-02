@@ -127,25 +127,20 @@ namespace VisitReservation.Services
 
 
         // Anuluje wizytę, zmieniając jej status
-        public AppointmentStatus CancelAppointment(int appointmentId)
+        public async Task<AppointmentStatus> CancelAppointmentAsync(int appointmentId)
         {
-            var appointment = _context.Appointments.Find(appointmentId);
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
             if (appointment == null)
             {
                 throw new InvalidOperationException("Appointment not found.");
             }
 
-            // Sprawdź, czy wizyta jest oczekująca
-            if (!IsAppointmentPending(appointmentId))
-            {
-                throw new InvalidOperationException("Appointment is not pending and cannot be cancelled.");
-            }
-
             appointment.AppointmentStatus = AppointmentStatus.Cancelled;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return AppointmentStatus.Cancelled;
         }
+
 
         // Zmienia termin wizyty
         public AppointmentStatus RescheduleAppointment(int appointmentId, DateTime newDate)
@@ -208,9 +203,11 @@ namespace VisitReservation.Services
         public async Task<IList<Appointment>> GetUpcomingAppointmentsForPatientAsync(string patientId)
         {
             return await _context.Appointments
-                .Where(a => a.PatientId == patientId && a.AppointmentDateTime >= DateTime.Now)
+                .Include(a => a.Doctor) 
+                .Where(a => a.PatientId == patientId && a.AppointmentDateTime >= DateTime.Now && a.AppointmentStatus == AppointmentStatus.Confirmed)
                 .ToListAsync();
         }
+
 
 
         // Pomocnicza metoda sprawdzająca, czy użytkownik jest autoryzowany do modyfikacji wizyty

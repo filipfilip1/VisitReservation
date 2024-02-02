@@ -16,7 +16,7 @@ namespace VisitReservation.Services
         Task<List<Appointment>> GetPendingAppointmentsForDoctorAsync(string doctorId);
 
         Task<AppointmentStatus> ConfirmAppointmentAsync(int appointmentId);
-        AppointmentStatus CancelAppointment(int appointmentId);
+        Task<AppointmentStatus> CancelAppointmentAsync(int appointmentId);
         AppointmentStatus RescheduleAppointment(int appointmentId, DateTime newDate);
 
     }

@@ -35,7 +35,9 @@ else
         <div>
             <span>Data: @appointment.AppointmentDateTime.ToString("dd-MM-yyyy HH:mm")</span>
             <span>Lekarz: @appointment.Doctor.UserName</span>
-            <a asp-page="/Appointments/Delete" asp-route-id="@appointment.AppointmentId">Odwołaj</a>
+            <form method="post" asp-page-handler="CancelAppointment" asp-route-appointmentId="@appointment.AppointmentId">
+                <button type="submit" class="btn btn-warning">Odwołaj</button>
+            </form>
         </div>
     }
 }

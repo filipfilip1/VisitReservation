@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using VisitReservation.Models; 
 
@@ -16,7 +17,11 @@ namespace VisitReservation.Pages.Register
 
         public class InputModel
         {
+            [Required]
+            [EmailAddress]
             public string Email { get; set; }
+            [Required]
+            [DataType(DataType.Password)]
             public string Password { get; set; }
             public DateTime DateOfBirth { get; set; }
         }
