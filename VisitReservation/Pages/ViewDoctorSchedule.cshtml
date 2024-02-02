@@ -28,14 +28,25 @@
         @foreach (var slot in Model.AvailableTimeSlots)
         {
             <li>
-                <form method="post" asp-page-handler="BookAppointment">
-                    <input type="hidden" name="DoctorId" value="@Model.DoctorId" />
-                    <input type="hidden" name="Date" value="@Model.SelectedDate.Value.ToString("yyyy-MM-dd")" />
-                    <input type="hidden" name="Time" value="@slot.StartTime.ToString()" />
+                <form method="post" asp-page="/BookAppointment">
+                    <input type="hidden" name="doctorId" value="@Model.DoctorId" />
+                    <input type="hidden" name="selectedDate" value="@Model.SelectedDate.Value.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="time" value="@slot.StartTime.ToString("HH\\:mm")" />
                     <button type="submit">Umów wizytę na godzinę @slot.StartTime.ToShortTimeString()</button>
                 </form>
-
             </li>
         }
     </ul>
+
 }
+
+
+@*
+    <form method="post" asp-page="/BookAppointment">
+    <input type="hidden" asp-for="DoctorId" />
+    <input type="hidden" asp-for="SelectedDate" />
+    <input type="hidden" name="Time" value="@slot.StartTime" />
+    <button type="submit">Umów wizytę na godzinę @slot.StartTime.ToShortTimeString()</button>
+</form>
+
+*@

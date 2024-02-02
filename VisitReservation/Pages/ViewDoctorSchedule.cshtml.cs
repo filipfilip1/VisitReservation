@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using VisitReservation.Models;
 using VisitReservation.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static VisitReservation.Services.BookingService;
 
 namespace VisitReservation.Pages
@@ -16,10 +17,14 @@ namespace VisitReservation.Pages
 
         [BindProperty(SupportsGet = true)]
         public DateTime? SelectedDate { get; set; }
+        [BindProperty]
+        public string Time { get; set; }
 
         public string DoctorName { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public IList<DateTime> AvailableDays { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public IList<DoctorAppointmentSlot> AvailableTimeSlots { get; set; }
 
@@ -29,23 +34,36 @@ namespace VisitReservation.Pages
             _bookingService = bookingService;
         }
 
-        public async Task OnGetAsync(string doctorId, DateTime? selectedDate = null)
+        public async Task OnGetAsync()
         {
-            DoctorId = doctorId;
-            DoctorName = await _doctorScheduleService.GetDoctorNameAsync(DoctorId);
-            AvailableDays = await _doctorScheduleService.GetAvailableDaysForDoctorAsync(DoctorId);
 
-            if (selectedDate.HasValue)
+            Console.WriteLine($"DoctorId: {DoctorId}, SelectedDate: {SelectedDate}, {DoctorName }");
+            // DoctorName = await _doctorScheduleService.GetDoctorNameAsync(DoctorId);
+            AvailableDays = await _doctorScheduleService.GetAvailableDaysForDoctorAsync(DoctorId);
+            if (SelectedDate.HasValue)
             {
-                SelectedDate = selectedDate;
-                AvailableTimeSlots = await _bookingService.GetAvailableTimeSlotsForDayAsync(selectedDate.Value, DoctorId);
+                AvailableTimeSlots = await _bookingService.GetAvailableTimeSlotsForDayAsync(SelectedDate.Value, DoctorId);
             }
         }
 
-        public async Task<IActionResult> OnPostAsync(string doctorId, DateTime selectedDate, TimeSpan selectedTime)
+        public async Task<IActionResult> OnPostAsync()
         {
-            // Przekieruje do strony rezerwacji wizyty, przekazuj¹c zebrane dane
-            return RedirectToPage("/BookAppointment", new { doctorId = doctorId, date = selectedDate, time = selectedTime });
+            
+            // Konwersja string na TimeSpan
+            TimeSpan selectedTime;
+            bool isTimeValid = TimeSpan.TryParse(Time, out selectedTime);
+            if (!isTimeValid)
+            {
+                // obs³u¿enie sytuacji gdy czas jest nieprawid³owy
+                ModelState.AddModelError("", "Nieprawid³owy czas.");
+                return Page();
+            }
+
+            Console.WriteLine($"DoctorId: {DoctorId}, SelectedDate: {SelectedDate}, Time: {Time}");
+
+            // Przekierowanie do strony BookAppointment z wykorzystaniem w³aœciwoœci zwi¹zanych z modelem
+            return RedirectToPage("/BookAppointment", new { DoctorId, SelectedDate = SelectedDate.Value.ToString("yyyy-MM-dd"), Time = selectedTime.ToString(@"hh\:mm") });
         }
     }
+
 }

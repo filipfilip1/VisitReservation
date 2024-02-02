@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Threading.Tasks;
 using VisitReservation.Models;
 using VisitReservation.Services;
 
@@ -11,14 +13,17 @@ namespace VisitReservation.Pages
         private readonly IAppointmentService _appointmentService;
         private readonly UserManager<Account> _userManager;
 
-        public BookAppointmentModel(IAppointmentService appointmentService, UserManager<Account> userManager)
-        {
-            _appointmentService = appointmentService;
-            _userManager = userManager;
-        }
+        // Ustawienie BindProperty dla ka¿dego z parametrów
+        [BindProperty(SupportsGet = true)]
+        public string DoctorId { get; set; }
 
-        [BindProperty]
-        public Appointment Appointment { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SelectedDate { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Time { get; set; }
+
+        public Appointment Appointment { get; set; } = new Appointment();
 
         [TempData]
         public string SuccessMessage { get; set; }
@@ -26,60 +31,49 @@ namespace VisitReservation.Pages
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string doctorId, DateTime date, TimeSpan time)
+        public BookAppointmentModel(IAppointmentService appointmentService, UserManager<Account> userManager)
         {
-            // Sprawdzenie czy dane zosta³y przekazane
-            if (!string.IsNullOrEmpty(doctorId) && date != DateTime.MinValue && time != null)
-            {
-                Appointment = new Appointment
-                {
-                    DoctorId = doctorId,
-                    AppointmentDateTime = date.Add(time)
-                    // Ustaw pozosta³e wymagane pola, jeœli to konieczne
-                };
-
-                // Mo¿esz tak¿e za³adowaæ dodatkowe informacje, jeœli to potrzebne
-                // Na przyk³ad nazwê lekarza, szczegó³y o u¿ytkowniku itp.
-            }
-            else
-            {
-                // Ustawienie odpowiedniej wiadomoœci b³êdu lub przekierowanie
-                // w przypadku braku niektórych danych
-                return RedirectToPage();
-            }
-
-            return Page();
+            _appointmentService = appointmentService;
+            _userManager = userManager;
         }
 
-        public async Task<IActionResult> OnPostAsync(string doctorId, DateTime date, TimeSpan time)
+
+
+        public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user != null)
+            if (user == null)
             {
-                Appointment = new Appointment
-                {
-                    DoctorId = doctorId,
-                    PatientId = user.Id,
-                    AppointmentDateTime = date.Add(time),
-                    AppointmentStatus = AppointmentStatus.Pending
-                };
+                ErrorMessage = "Nale¿y siê zalogowaæ.";
+                return RedirectToPage("/Index");
+            }
+
+            Console.WriteLine($"OnPost BookAppointment: doctorId={DoctorId}, selectedDate={SelectedDate}, time={Time}");
+
+            if (DateTime.TryParse(SelectedDate, out DateTime parsedDate) && TimeSpan.TryParse(Time, out TimeSpan parsedTime) && !string.IsNullOrEmpty(DoctorId))
+            {
+                DateTime appointmentDateTime = parsedDate.Add(parsedTime);
 
                 try
                 {
-                    await _appointmentService.CreateAppointmentAsync(Appointment, user.Id);
+                    // Bezpoœrednie wywo³anie nowej metody CreateAppointmentAsync z aktualnymi parametrami
+                    await _appointmentService.CreateAppointmentAsync(DoctorId, user.Id, appointmentDateTime);
                     SuccessMessage = "Wizyta zosta³a pomyœlnie zarezerwowana.";
                     return RedirectToPage("/PatientDashboard/Home");
                 }
                 catch (Exception ex)
                 {
                     ErrorMessage = $"Wyst¹pi³ b³¹d podczas rezerwacji: {ex.Message}";
+                    return Page();
                 }
             }
-
-            return Page();
+            else
+            {
+                ErrorMessage = "Nieprawid³owe dane. Proszê spróbowaæ ponownie.";
+                return Page();
+            }
         }
 
-    }
 
+    }
 }

@@ -6,7 +6,7 @@ namespace VisitReservation.Services
     public interface IAppointmentService
     {
         Task<Appointment> GetAppointmentAsync(int appointmentId);
-        Task<Appointment> CreateAppointmentAsync(Appointment appointment, string userId);
+        Task<Appointment> CreateAppointmentAsync(string doctorId, string userId, DateTime appointmentDateTime);
         Task UpdateAppointmentAsync(Appointment appointment, string userId);
         Task DeleteAppointmentAsync(int appointmentId, string userId);
         Task<IList<Appointment>> GetPastAppointmentsForDoctorAsync(string doctorId);

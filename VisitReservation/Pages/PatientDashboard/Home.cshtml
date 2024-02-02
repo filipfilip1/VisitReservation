@@ -25,7 +25,9 @@ else
     <p>Brak przeszłych wizyt.</p>
 }
 
-<h3>Nadchodzące Wizyty</h3>
+
+@*
+    <h3>Nadchodzące Wizyty</h3>
 @if (Model.UpcomingAppointments.Any())
 {
     foreach (var appointment in Model.UpcomingAppointments)
@@ -41,6 +43,9 @@ else
 {
     <p>Brak nadchodzących wizyt.</p>
 }
+
+*@
+
 
 <h3>Umów Wizytę</h3>
 <a asp-page="/AvailableDoctors" class="btn btn-primary">Wybierz lekarza</a>

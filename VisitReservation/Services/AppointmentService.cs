@@ -37,20 +37,32 @@ namespace VisitReservation.Services
         }
 
         // Tworzy nową wizytę z danymi przekazanymi przez użytkownika
-        public async Task<Appointment> CreateAppointmentAsync(Appointment appointment, string userId)
+        public async Task<Appointment> CreateAppointmentAsync(string doctorId, string userId, DateTime appointmentDateTime)
         {
-            // czy użytkownik ma uprawnienia do utworzenia wizyty
+            Appointment appointment = new Appointment();
+
+            // Sprawdzenie, czy użytkownik ma uprawnienia do utworzenia wizyty
             if (!await _userService.IsCurrentUser(userId) && !await _userService.IsAdmin())
             {
                 throw new UnauthorizedAccessException("User is not authorized to create an appointment.");
             }
 
-            // Dodaj nową wizytę do bazy danych
+            // Ustawienie DoctorId i PatientId dla wizyty
+            appointment.DoctorId = doctorId;
+            appointment.PatientId = userId;
+
+            // Ustawienie daty i godziny wizyty
+            appointment.AppointmentDateTime = appointmentDateTime;
+
+            // Ustawienie domyślnego statusu wizyty na Pending
+            appointment.AppointmentStatus = AppointmentStatus.Pending;
+
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
             return appointment;
         }
+
 
         // Aktualizacja dane istniejącej wizyty
         public async Task UpdateAppointmentAsync(Appointment appointment, string userId)

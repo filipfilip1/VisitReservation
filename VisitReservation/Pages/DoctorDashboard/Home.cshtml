@@ -30,7 +30,7 @@ else
     <ul>
         @foreach (var appointment in Model.UpcomingAppointments)
         {
-            <li>@appointment.AppointmentDateTime: Pacjent - @appointment.Patient.UserName</li>
+            <li>@appointment.AppointmentDateTime: Pacjent - @appointment.Patient</li>
         }
     </ul>
 }
