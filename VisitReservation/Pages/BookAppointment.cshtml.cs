@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using VisitReservation.Data;
 using VisitReservation.Models;
 using VisitReservation.Services;
 
@@ -13,6 +15,8 @@ namespace VisitReservation.Pages
         private readonly IAppointmentService _appointmentService;
         private readonly UserManager<Account> _userManager;
 
+        private readonly ApplicationDbContext _context;
+
         // Ustawienie BindProperty dla ka¿dego z parametrów
         [BindProperty(SupportsGet = true)]
         public string DoctorId { get; set; }
@@ -22,8 +26,8 @@ namespace VisitReservation.Pages
 
         [BindProperty(SupportsGet = true)]
         public string Time { get; set; }
-
-        public Appointment Appointment { get; set; } = new Appointment();
+        [BindProperty(SupportsGet = true)]
+        public string DoctorName { get; set; }
 
         [TempData]
         public string SuccessMessage { get; set; }
@@ -31,10 +35,11 @@ namespace VisitReservation.Pages
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public BookAppointmentModel(IAppointmentService appointmentService, UserManager<Account> userManager)
+        public BookAppointmentModel(ApplicationDbContext context, IAppointmentService appointmentService, UserManager<Account> userManager)
         {
             _appointmentService = appointmentService;
             _userManager = userManager;
+            _context = context;
         }
 
 
@@ -56,10 +61,20 @@ namespace VisitReservation.Pages
 
                 try
                 {
+                    var DoctorName = await _context.Doctors
+                        .Where(d => d.Id == DoctorId)
+                        .Select(d => d.UserName)
+                        .FirstOrDefaultAsync();
+
                     // Bezpoœrednie wywo³anie nowej metody CreateAppointmentAsync z aktualnymi parametrami
                     await _appointmentService.CreateAppointmentAsync(DoctorId, user.Id, appointmentDateTime);
                     SuccessMessage = "Wizyta zosta³a pomyœlnie zarezerwowana.";
-                    return RedirectToPage("/PatientDashboard/Home");
+                    return RedirectToPage("/BookAppointment", new
+                    {
+                        DoctorName,
+                        SelectedDate = appointmentDateTime,
+                        success = true
+                    });
                 }
                 catch (Exception ex)
                 {

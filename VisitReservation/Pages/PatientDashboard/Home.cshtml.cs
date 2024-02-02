@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using VisitReservation.Models;
 using VisitReservation.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace VisitReservation.Pages.PatientDashboard
@@ -43,17 +44,19 @@ namespace VisitReservation.Pages.PatientDashboard
             {
                 // Implementacja metody do pobierania przesz³ych wizyt
                 PastAppointments = _context.Appointments
+                    .Include(a => a.Doctor)
                     .Where(a => a.PatientId == userId && a.AppointmentDateTime < DateTime.Now)
                     .ToList();
             }
 
             private void LoadUpcomingAppointments(string userId)
             {
-                // Implementacja metody do pobierania nadchodz¹cych wizyt
+            // Implementacja metody do pobierania nadchodz¹cych wizyt
                 UpcomingAppointments = _context.Appointments
+                    .Include(a => a.Doctor) 
                     .Where(a => a.PatientId == userId && a.AppointmentDateTime >= DateTime.Now)
                     .ToList();
-            }
+        }
 
             private void LoadReviews(string userId)
             {

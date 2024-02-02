@@ -5,6 +5,7 @@ using VisitReservation.Models;
 using Microsoft.EntityFrameworkCore;
 using VisitReservation.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace VisitReservation.Pages.DoctorDashboard
@@ -26,15 +27,16 @@ namespace VisitReservation.Pages.DoctorDashboard
         public IList<Appointment> PastAppointments { get; set; }
         public IList<Appointment> UpcomingAppointments { get; set; }
         public IList<Review> Reviews { get; set; }
+        public IList<Appointment> PendingAppointments { get; set; }
 
         public async Task OnGetAsync()
         {
             var currentUser = await _userManager.GetUserAsync(User);
-
             if (currentUser is Doctor doctor)
             {
                 PastAppointments = await _appointmentService.GetPastAppointmentsForDoctorAsync(doctor.Id);
                 UpcomingAppointments = await _appointmentService.GetUpcomingAppointmentsForDoctorAsync(doctor.Id);
+                PendingAppointments = await _appointmentService.GetPendingAppointmentsForDoctorAsync(doctor.Id); 
 
                 Reviews = await _context.Reviews
                     .Where(r => r.DoctorId == doctor.Id)
@@ -42,9 +44,30 @@ namespace VisitReservation.Pages.DoctorDashboard
             }
             else
             {
-                // Jeœli u¿ytkownik nie jest doktorem, przekieruj do strony g³ównej lub poka¿ komunikat o b³êdzie
+
             }
         }
+
+        public async Task<IActionResult> OnPostConfirmAppointmentAsync(int appointmentId)
+        {
+            try
+            {
+                var result = await _appointmentService.ConfirmAppointmentAsync(appointmentId);
+                // Ustaw komunikat o sukcesie
+                TempData["SuccessMessage"] = "Wizyta zosta³a potwierdzona.";
+            }
+            catch (Exception ex)
+            {
+                // Ustaw komunikat o b³êdzie
+                TempData["ErrorMessage"] = $"Nie uda³o siê potwierdziæ wizyty: {ex.Message}";
+            }
+
+            // Przekieruj z powrotem do tej samej strony, aby odœwie¿yæ listê wizyt
+            return RedirectToPage();
+        }
+
+
+
 
         // dodatkowe metody, np. do ustalania harmonogramu, aktualizacji kalendarza itp. ??
     }

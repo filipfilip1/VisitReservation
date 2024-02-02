@@ -39,6 +39,27 @@ else
     <p>Brak nadchodzących wizyt.</p>
 }
 
+@if (Model.PendingAppointments != null && Model.PendingAppointments.Any())
+{
+    <h3>Wizyty do Zatwierdzenia</h3>
+    <ul>
+        @foreach (var appointment in Model.PendingAppointments)
+        {
+            <li>
+                @appointment.AppointmentDateTime: Pacjent - @appointment.Patient.UserName
+                <form method="post" asp-page-handler="ConfirmAppointment" asp-route-appointmentId="@appointment.AppointmentId">
+                    <button type="submit" class="btn btn-primary">Potwierdź</button>
+                </form>
+            </li>
+
+        }
+    </ul>
+}
+else
+{
+    <p>Brak wizyt oczekujących na potwierdzenie.</p>
+}
+
 @*
     @if (Model.Reviews != null && Model.Reviews.Any())
 {

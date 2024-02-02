@@ -105,25 +105,26 @@ namespace VisitReservation.Services
         }
 
         // Potwierdza wizytę, zmieniając jej status
-        public AppointmentStatus ConfirmAppointment(int appointmentId)
+        public async Task<AppointmentStatus> ConfirmAppointmentAsync(int appointmentId)
         {
-            var appointment = _context.Appointments.Find(appointmentId);
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
             if (appointment == null)
             {
                 throw new InvalidOperationException("Appointment not found.");
             }
 
             // Sprawdź, czy wizyta jest oczekująca
-            if (!IsAppointmentPending(appointmentId))
+            if (appointment.AppointmentStatus != AppointmentStatus.Pending)
             {
                 throw new InvalidOperationException("Appointment is not pending and cannot be confirmed.");
             }
 
             appointment.AppointmentStatus = AppointmentStatus.Confirmed;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return AppointmentStatus.Confirmed;
         }
+
 
         // Anuluje wizytę, zmieniając jej status
         public AppointmentStatus CancelAppointment(int appointmentId)
@@ -167,6 +168,15 @@ namespace VisitReservation.Services
             return AppointmentStatus.Rescheduled;
         }
 
+        public async Task<List<Appointment>> GetPendingAppointmentsForDoctorAsync(string doctorId)
+        {
+            return await _context.Appointments
+                .Include(a => a.Patient)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentStatus == AppointmentStatus.Pending)
+                .ToListAsync();
+        }
+
+
         public async Task<IList<Appointment>> GetPastAppointmentsForDoctorAsync(string doctorId)
         {
             return await _context.Appointments
@@ -178,11 +188,15 @@ namespace VisitReservation.Services
         public async Task<IList<Appointment>> GetUpcomingAppointmentsForDoctorAsync(string doctorId)
         {
             return await _context.Appointments
-                .Include(a => a.Patient)
-                .Where(a => a.DoctorId == doctorId && a.AppointmentDateTime >= DateTime.Now)
+                .Include(a => a.Patient) 
+                .Where(a =>
+                    a.DoctorId == doctorId &&
+                    a.AppointmentDateTime >= DateTime.Now &&
+                    a.AppointmentStatus == AppointmentStatus.Confirmed) 
                 .OrderBy(a => a.AppointmentDateTime)
                 .ToListAsync();
         }
+
 
         public async Task<IList<Appointment>> GetPastAppointmentsForPatientAsync(string patientId)
         {
