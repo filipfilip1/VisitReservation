@@ -53,18 +53,30 @@ namespace VisitReservation.Pages.DoctorDashboard
             try
             {
                 var result = await _appointmentService.ConfirmAppointmentAsync(appointmentId);
-                // Ustaw komunikat o sukcesie
                 TempData["SuccessMessage"] = "Wizyta zosta³a potwierdzona.";
             }
             catch (Exception ex)
             {
-                // Ustaw komunikat o b³êdzie
                 TempData["ErrorMessage"] = $"Nie uda³o siê potwierdziæ wizyty: {ex.Message}";
             }
-
-            // Przekieruj z powrotem do tej samej strony, aby odœwie¿yæ listê wizyt
             return RedirectToPage();
         }
+
+        public async Task<IActionResult> OnPostCancelAppointmentAsync(int appointmentId)
+        {
+            try
+            {
+                var result = await _appointmentService.CancelAppointmentAsync(appointmentId);
+                TempData["SuccessMessage"] = "Wizyta zosta³a odwo³ana.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Nie uda³o siê odwo³aæ wizyty: {ex.Message}";
+            }
+
+            return RedirectToPage();
+        }
+
 
 
 
