@@ -178,6 +178,7 @@ namespace VisitReservation.Services
         public async Task<IList<Appointment>> GetUpcomingAppointmentsForDoctorAsync(string doctorId)
         {
             return await _context.Appointments
+                .Include(a => a.Patient)
                 .Where(a => a.DoctorId == doctorId && a.AppointmentDateTime >= DateTime.Now)
                 .OrderBy(a => a.AppointmentDateTime)
                 .ToListAsync();

@@ -12,7 +12,7 @@ using VisitReservation.Data;
 namespace VisitReservation.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240201215003_InitialCreate")]
+    [Migration("20240202142448_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
