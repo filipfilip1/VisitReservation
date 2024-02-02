@@ -4,10 +4,12 @@ using VisitReservation.Data;
 using VisitReservation.Models;
 using Microsoft.EntityFrameworkCore;
 using VisitReservation.Services;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace VisitReservation.Pages.DoctorDashboard
 {
+    [Authorize(Roles = "Doctor")]
     public class HomeModel : PageModel
     {
         private readonly UserManager<Account> _userManager;

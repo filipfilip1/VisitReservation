@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using VisitReservation.Models;
 using VisitReservation.Data;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace VisitReservation.Pages.PatientDashboard
 {
-        public class HomeModel : PageModel
+    [Authorize(Roles = "Patient")]
+    public class HomeModel : PageModel
         {
             private readonly UserManager<Account> _userManager;
             private readonly ApplicationDbContext _context; 
